@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { Calculator, List, Plus, Trash2, ArrowRight, Eye } from 'lucide-react';
 
-// Типи даних
 type ListElement = number | string;
 type LinkedList = null | { head: ListElement; tail: LinkedList };
 
-// Селектор: взяти голову списку
 const Select_Head = (list: LinkedList): ListElement | null => {
   return list === null ? null : list.head;
 };
 
-// Селектор: взяти хвіст списку
 const Select_Tail = (list: LinkedList): LinkedList => {
   return list === null ? null : list.tail;
 };
 
-// Конструктор: побудувати список
 const Cons = (head: ListElement, tail: LinkedList): LinkedList => {
   return { head, tail };
 };
 
-// Рекурсивна функція для підрахунку нечислових елементів
 const countNonNumeric = (list: LinkedList): number => {
   if (list === null) {
     return 0;
@@ -33,7 +28,6 @@ const countNonNumeric = (list: LinkedList): number => {
   return isNonNumeric + countNonNumeric(tail);
 };
 
-// Рекурсивна функція для обчислення факторіалу
 const factorial = (n: number): number => {
   if (n <= 1) {
     return 1;
@@ -41,13 +35,11 @@ const factorial = (n: number): number => {
   return n * factorial(n - 1);
 };
 
-// Основна функція обчислення факторіалу від кількості нечислових елементів
 const computeFactorialOfNonNumeric = (list: LinkedList): number => {
   const count = countNonNumeric(list);
   return factorial(count);
 };
 
-// Рекурсивна функція для перетворення списку у масив
 const listToArray = (list: LinkedList): ListElement[] => {
   if (list === null) {
     return [];
@@ -55,7 +47,6 @@ const listToArray = (list: LinkedList): ListElement[] => {
   return [Select_Head(list)!, ...listToArray(Select_Tail(list))];
 };
 
-// Рекурсивна функція для додавання елемента в кінець списку
 const appendToList = (list: LinkedList, element: ListElement): LinkedList => {
   if (list === null) {
     return Cons(element, null);
@@ -63,18 +54,7 @@ const appendToList = (list: LinkedList, element: ListElement): LinkedList => {
   return Cons(Select_Head(list)!, appendToList(Select_Tail(list), element));
 };
 
-// Рекурсивна функція для видалення елемента за індексом
-const removeAtIndex = (list: LinkedList, index: number, current: number = 0): LinkedList => {
-  if (list === null) {
-    return null;
-  }
-  if (current === index) {
-    return Select_Tail(list);
-  }
-  return Cons(Select_Head(list)!, removeAtIndex(Select_Tail(list), index, current + 1));
-};
 
-// Функція для візуалізації списку у форматі (a b c ())
 const visualizeList = (list: LinkedList): string => {
   if (list === null) {
     return '';
@@ -104,21 +84,12 @@ const App: React.FC = () => {
   const addElement = () => {
     if (inputValue.trim() === '') return;
 
-    // Визначаємо тип елемента
     const element: ListElement = isNaN(Number(inputValue))
       ? inputValue.trim()
       : Number(inputValue);
 
-    // Додаємо елемент до списку
     setList(appendToList(list, element));
     setInputValue('');
-    setResult(null);
-    setSelectedHead(null);
-    setSelectedTail(null);
-  };
-
-  const removeElement = (index: number) => {
-    setList(removeAtIndex(list, index));
     setResult(null);
     setSelectedHead(null);
     setSelectedTail(null);
@@ -303,12 +274,6 @@ const App: React.FC = () => {
                         {typeof element === 'number' ? 'Число' : 'Текст'}
                       </span>
                     </div>
-                    <button
-                      onClick={() => removeElement(index)}
-                      className="text-red-500 hover:text-red-700 transition-colors"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
                   </div>
                 ))}
               </div>
